@@ -6,4 +6,5 @@ export interface Debate {
   isPublic: boolean; // 공개 여부
   password?: string; // 비밀번호
   topic: string; // 토론 주제
+  adminId: string; // 토론 방장 ID
 }
