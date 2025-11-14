@@ -1,25 +1,38 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { v4 } from 'uuid';
+import { Debate } from './models/debate.model';
+import { CreateDebateRequestDto } from './dto/create-debate.dto';
 
-interface DebateRoom {
-  name: string; // RoomName
-  participants: string[]; // UserId Array
-}
 @Injectable()
 export class DebateService {
-  private debateRooms: Record<string, DebateRoom> = {}; // Rooms InMemory Record
+  private debates: Record<string, Debate> = {}; // Rooms InMemory Record
 
-  createDebateRoom(name: string, createUserId: string): DebateRoom {
-    let roomId: string;
+  createDebate(
+    debate: CreateDebateRequestDto,
+    createUserId: string,
+  ): Debate {
+    let debateId: string;
     do {
-      roomId = v4();
-    } while (this.debateRooms[roomId]);
+      debateId = v4();
+    } while (this.debates[debateId]);
+    const { name, maxParticipants, isPublic, password, topic } = debate;
 
-    this.debateRooms[roomId] = { name: name, participants: [createUserId] };
-    return this.debateRooms[roomId];
+    if (!isPublic && !password)
+      throw new BadRequestException('private requires a password');
+
+    this.debates[debateId] = {
+      id: debateId,
+      name,
+      participants: [createUserId],
+      maxParticipants,
+      isPublic,
+      topic,
+      ...(!isPublic && { password: password }),
+    };
+    return this.debates[debateId];
   }
 
-  getDebateRooms(): DebateRoom[] {
-    return Object.values(this.debateRooms);
+  getDebates(): Debate[] {
+    return Object.values(this.debates);
   }
 }
