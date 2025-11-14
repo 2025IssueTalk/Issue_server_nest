@@ -5,7 +5,10 @@ import {
   CreateDebateResponseDto,
 } from './dto/create-debate.dto';
 import { User } from '@common/decorators/user.decorator';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('debate')
+@ApiBearerAuth()
 @Controller('debate')
 export class DebateController {
   constructor(private readonly debateService: DebateService) {}
