@@ -26,7 +26,7 @@ export const User = createParamDecorator(
     try {
       const payload = jwt.verify(
         token,
-        process.env.JWT_SECRET || '',
+        process.env.JWT_SECRET || 'test',
       ) as JwtPayloadSafe;
 
       if (!payload) throw new UnauthorizedException('Invalid JWT token');
