@@ -4,7 +4,7 @@ import {
   CreateDebateRequestDto,
   CreateDebateResponseDto,
 } from './dto/create-debate.dto';
-import { User } from '../common/decorators/user.decorator';
+import { User } from '@common/decorators/user.decorator';
 
 @Controller('debate')
 export class DebateController {
