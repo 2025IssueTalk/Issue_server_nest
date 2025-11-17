@@ -35,11 +35,15 @@ export class DebateGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('joinDebate')
   handleJoinDebate(
-    @MessageBody() data: { roomId: string },
+    @MessageBody() data: { roomId: string; password?: string },
     @WsUser('userId') userId: string,
     @ConnectedSocket() client: Socket,
   ) {
-    const participants = this.debateService.joinDebate(data.roomId, userId);
+    const participants = this.debateService.joinDebate(
+      data.roomId,
+      userId,
+      data.password,
+    );
     client.join(data.roomId);
     client.to(data.roomId).emit('participants', participants);
     client.emit('joinedDebate', { roomId: data.roomId, participants });

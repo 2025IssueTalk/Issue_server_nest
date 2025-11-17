@@ -36,9 +36,13 @@ export class DebateService {
     return Object.values(this.debates);
   }
 
-  joinDebate(debateId: string, userId: string): string[] {
+  joinDebate(debateId: string, userId: string, password?: string): string[] {
     const debate = this.debates[debateId];
     if (!debate) throw new BadRequestException('Debate not found');
+
+    if (!debate.isPublic)
+      if (debate.password !== password)
+        throw new BadRequestException('Password must match');
 
     if (!debate.participants.includes(userId)) debate.participants.push(userId);
 
