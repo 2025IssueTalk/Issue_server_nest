@@ -43,6 +43,8 @@ export class DebateService {
     if (!debate.isPublic)
       if (debate.password !== password)
         throw new BadRequestException('Password must match');
+    if (debate.participants.length >= debate.maxParticipants)
+      throw new BadRequestException('Max Participants')
 
     if (!debate.participants.includes(userId)) debate.participants.push(userId);
 
@@ -59,8 +61,8 @@ export class DebateService {
     if (!debate) throw new BadRequestException('Debate not found');
 
     debate.participants = debate.participants.filter((id) => id !== userId);
-    this.userRelation.get(userId)?.delete(userId);
-
+    this.userRelation.get(userId)?.delete(debateId);
+    
     return debate.participants;
   }
 
